@@ -3,9 +3,11 @@
 
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
+from _datetime import datetime
 
 # load dataset
 mnist = input_data.read_data_sets("MNIST_data", one_hot=True)
+
 
 # define batch size
 batch_size = 100;
@@ -33,7 +35,9 @@ correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(prediction, 1))
 # get accuracy rate
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
-
+# timestamp
+time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+print(time)
 # run
 with tf.Session() as sess:
     sess.run(init)
@@ -45,6 +49,9 @@ with tf.Session() as sess:
         acc = sess.run(accuracy, feed_dict={x: mnist.test.images, y: mnist.test.labels})
         print("iter " + str(epoch) + ", testing accuracy " + str(acc))
 
+        # timestamp
+        time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        print(time)
 
 # fine-tune params: batch_size, add hidden layer, initial value, loss function, learning rate, optimizer type, training epoch
 
@@ -94,4 +101,3 @@ with tf.Session() as sess:
 # iter 18, testing accuracy 0.929
 # iter 19, testing accuracy 0.9289
 # iter 20, testing accuracy 0.9289
-
