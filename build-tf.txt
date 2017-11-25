@@ -1,0 +1,1 @@
+cmake .. -A x64 -DCMAKE_BUILD_TYPE=Release -DSWIG_EXECUTABLE=C:\Tensorflow\swig-3.0.12 -DPYTHON_EXECUTABLE="C:\Program Files\python35\python.exe" -DPYTHON_LIBRARIES="C:\Program Files\python35\libs\python35.lib" -Dtensorflow_WIN_CPU_SIMD_OPTIONS=/arch:AVX
