@@ -10,7 +10,7 @@ mnist = input_data.read_data_sets("MNIST_data", one_hot=True)
 
 # define batch size
 batch_size = 100;
-n_batch = mnist.train.num_examples
+n_batch = mnist.train.num_examples // batch_size
 
 
 def variable_summaries(var):

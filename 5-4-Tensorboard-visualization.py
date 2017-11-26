@@ -11,7 +11,7 @@ mnist = input_data.read_data_sets("MNIST_data", one_hot=True)
 
 max_steps = 1001
 image_num = 3000
-DIR = "G:/Tensorflow/TF_basic/"
+DIR = "C:/Tensorflow/TF_basic/"
 
 # 定义会话
 sess = tf.Session()
@@ -21,7 +21,7 @@ embedding = tf.Variable(tf.stack(mnist.test.images[:image_num]), trainable=False
 
 # define batch size
 batch_size = 100;
-n_batch = mnist.train.num_examples
+n_batch = mnist.train.num_examples // batch_size
 
 
 def variable_summaries(var):
