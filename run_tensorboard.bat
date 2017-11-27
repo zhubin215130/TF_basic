@@ -1,0 +1,1 @@
+tensorboard --logdir="D:\Tensorflow\TF_basic\logs"
