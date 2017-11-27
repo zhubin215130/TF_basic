@@ -11,7 +11,7 @@ mnist = input_data.read_data_sets("MNIST_data", one_hot=True)
 
 max_steps = 1001
 image_num = 3000
-DIR = "C:/Tensorflow/TF_basic/"
+DIR = "D:/py_workspace/TF_basic/"
 
 # 定义会话
 sess = tf.Session()

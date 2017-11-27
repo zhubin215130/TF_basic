@@ -161,15 +161,14 @@ with tf.Session() as sess:
         batch_xs, batch_ys = mnist.test.next_batch(batch_size)
         summary = sess.run(merged, feed_dict={x: batch_xs, y: batch_ys, keep_prob: 1.0})
         test_writer.add_summary(summary, i)
-        # timestamp
-        time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        print(time)
 
         if i % 100 == 0:
             test_acc = sess.run(accuracy, feed_dict={x: mnist.test.images, y: mnist.test.labels, keep_prob: 1.0})
-            train_acc = sess.run(accuracy, feed_dict={x: mnist.train.images[:10000], y: mnist.train.labels[:10000],
-                                                      keep_prob: 1.0})
+            train_acc = sess.run(accuracy, feed_dict={x: mnist.train.images[:10000], y: mnist.train.labels[:10000], keep_prob: 1.0})
             print("Iter " + str(i) + ", Testing Accuracy= " + str(test_acc) + ", Training Accuracy= " + str(train_acc))
+            # timestamp
+            time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            print(time)
 
 
 

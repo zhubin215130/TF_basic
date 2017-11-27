@@ -23,7 +23,7 @@ biases = tf.Variable(tf.constant(0.1, shape=[n_classes]))
 def RNN(X, weights, biases):
     #inputs:[batch_size, max_time, n_inputs]
     inputs = tf.reshape(X, [-1, max_time, n_inputs])
-    lstm_cell = tf.contrib.rnn.core_rnn_cell.BasicLSTMCell(lstm_size)
+    lstm_cell = tf.contrib.rnn.BasicLSTMCell(lstm_size)
     outputs, final_state = tf.nn.dynamic_rnn(lstm_cell, inputs, dtype=tf.float32)
     results = tf.nn.softmax(tf.matmul(final_state[1], weights) + biases)
     return results
@@ -46,9 +46,8 @@ with tf.Session() as sess:
             batch_xs, batch_ys = mnist.train.next_batch(batch_size)
             sess.run(train_step, feed_dict={x: batch_xs, y: batch_ys})
 
-            # timestamp
-            time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            print(time)
-
-    acc = sess.run(accuracy, feed_dict={x: mnist.test.images, y: mnist.test.labels})
-    print("iter " + str(epoch) + ", testing accuracy " + str(acc))
+        # timestamp
+        time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        print(time)
+        acc = sess.run(accuracy, feed_dict={x: mnist.test.images, y: mnist.test.labels})
+        print("iter " + str(epoch) + ", testing accuracy " + str(acc))

@@ -1,0 +1,2 @@
+model_checkpoint_path: "D:/py_workspace/TF_basic/projector/projector/a_model.ckpt-1001"
+all_model_checkpoint_paths: "D:/py_workspace/TF_basic/projector/projector/a_model.ckpt-1001"
