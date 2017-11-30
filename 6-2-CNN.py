@@ -1,7 +1,5 @@
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
-from _datetime import datetime
-from tensorflow.contrib.tensorboard.plugins import projector
 
 mnist = input_data.read_data_sets("MNIST_data", one_hot=True)
 batch_size = 100
