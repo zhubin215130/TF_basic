@@ -3,7 +3,6 @@ import tensorflow as tf
 from PIL import Image  # pip install Pillow
 from nets import nets_factory
 import numpy as np
-import matplotlib.pyplot as plt
 
 CHAR_SET_LEN = 10
 IMAGE_HEIGHT = 60
@@ -41,12 +40,12 @@ def read_and_decode(filename):
     image = tf.subtract(image, 0.5)
     image = tf.multiply(image, 2.0)
 
-    label0 = tf.cast(features['label0'], tf.int32)
-    label1 = tf.cast(features['label1'], tf.int32)
-    label2 = tf.cast(features['label2'], tf.int32)
-    label3 = tf.cast(features['label3'], tf.int32)
+    l0 = tf.cast(features['label0'], tf.int32)
+    l1 = tf.cast(features['label1'], tf.int32)
+    l2 = tf.cast(features['label2'], tf.int32)
+    l3 = tf.cast(features['label3'], tf.int32)
 
-    return image, label0, label1, label2, label3
+    return image, l0, l1, l2, l3
 
 
 image, label0, label1, label2, label3 = read_and_decode(TFRECORD_FILE)
@@ -114,7 +113,7 @@ with tf.Session()as sess:
 
             learning_rate = sess.run(lr)
             print("Iter:%d Loss:%.3f Accuracy:%.2f, %.2f, %.2f, %.2f  Learning_rate:%.4f" % (
-            i, loss_, acc0, acc1, acc2, acc3, learning_rate))
+                i, loss_, acc0, acc1, acc2, acc3, learning_rate))
 
             if i == 6000:
                 saver.save(sess, "./captcha/models/crack_captcha.model", global_step=1)
