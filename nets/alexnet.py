@@ -124,38 +124,43 @@ def alexnet_v2(inputs,
                     net = tf.reduce_mean(net, [1, 2], keep_dims=True, name='global_pool')
                     end_points['global_pool'] = net
                 if num_classes:
+
                     net = slim.dropout(net, dropout_keep_prob, is_training=is_training,
                                        scope='dropout7')
+
                     net0 = slim.conv2d(net, num_classes, [1, 1],
                                        activation_fn=None,
                                        normalizer_fn=None,
                                        biases_initializer=tf.zeros_initializer(),
                                        scope='fc8_0')
+
                     net1 = slim.conv2d(net, num_classes, [1, 1],
                                        activation_fn=None,
                                        normalizer_fn=None,
                                        biases_initializer=tf.zeros_initializer(),
                                        scope='fc8_1')
+
                     net2 = slim.conv2d(net, num_classes, [1, 1],
                                        activation_fn=None,
                                        normalizer_fn=None,
                                        biases_initializer=tf.zeros_initializer(),
                                        scope='fc8_2')
+
                     net3 = slim.conv2d(net, num_classes, [1, 1],
                                        activation_fn=None,
                                        normalizer_fn=None,
                                        biases_initializer=tf.zeros_initializer(),
                                        scope='fc8_3')
 
-                    if spatial_squeeze:
-                        net0 = tf.squeeze(net0, [1, 2], name='fc8_0/squeezed')
-                        end_points[sc.name + '/fc8_0'] = net0
-                        net1 = tf.squeeze(net1, [1, 2], name='fc8_1/squeezed')
-                        end_points[sc.name + '/fc8_1'] = net1
-                        net2 = tf.squeeze(net2, [1, 2], name='fc8_2/squeezed')
-                        end_points[sc.name + '/fc8_2'] = net2
-                        net3 = tf.squeeze(net3, [1, 2], name='fc8_3/squeezed')
-                        end_points[sc.name + '/fc8_3'] = net3
+            if spatial_squeeze:
+                net0 = tf.squeeze(net0, [1, 2], name='fc8_0/squeezed')
+                end_points[sc.name + '/fc8_0'] = net0
+                net1 = tf.squeeze(net1, [1, 2], name='fc8_1/squeezed')
+                end_points[sc.name + '/fc8_1'] = net1
+                net2 = tf.squeeze(net2, [1, 2], name='fc8_2/squeezed')
+                end_points[sc.name + '/fc8_2'] = net2
+                net3 = tf.squeeze(net3, [1, 2], name='fc8_3/squeezed')
+                end_points[sc.name + '/fc8_3'] = net3
 
             return net0, net1, net2, net3, end_points
 

@@ -1,10 +1,10 @@
-import tensorflow as tf
 import os
 import random
-import math
 import sys
-from PIL import Image
+
 import numpy as np
+import tensorflow as tf
+from PIL import Image
 
 _NUM_TEST = 500
 _RANDOM_SEED = 0

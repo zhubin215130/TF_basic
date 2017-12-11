@@ -1,6 +1,8 @@
+import os
 import tensorflow as tf
-
-from nets import nets_factory
+from PIL import Image  # pip install Pillow
+from nets2 import nets_factory
+import numpy as np
 
 CHAR_SET_LEN = 10
 IMAGE_HEIGHT = 60
@@ -55,39 +57,25 @@ image_batch, label_batch0, label_batch1, label_batch2, label_batch3 = tf.train.s
 
 train_network_fn = nets_factory.get_network_fn(
     'alexnet_v2',
-    num_classes=CHAR_SET_LEN,
+    num_classes=CHAR_SET_LEN * 4,
     weight_decay=0.0005,
     is_training=True
 )
 
 with tf.Session()as sess:
     X = tf.reshape(x, [BATCH_SIZE, 224, 224, 1])
-    logits0, logits1, logits2, logits3, end_points = train_network_fn(X)
+    logits, end_points = train_network_fn(X)
 
     one_hot_labels0 = tf.one_hot(indices=tf.cast(y0, tf.int32), depth=CHAR_SET_LEN)
     one_hot_labels1 = tf.one_hot(indices=tf.cast(y1, tf.int32), depth=CHAR_SET_LEN)
     one_hot_labels2 = tf.one_hot(indices=tf.cast(y2, tf.int32), depth=CHAR_SET_LEN)
     one_hot_labels3 = tf.one_hot(indices=tf.cast(y3, tf.int32), depth=CHAR_SET_LEN)
 
-    loss0 = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits0, labels=one_hot_labels0))
-    loss1 = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits1, labels=one_hot_labels1))
-    loss2 = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits2, labels=one_hot_labels2))
-    loss3 = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits3, labels=one_hot_labels3))
-
-    total_loss = (loss0 + loss1 + loss2 + loss3) / 4.0
-    optimizer = tf.train.AdamOptimizer(learning_rate=lr).minimize(total_loss)
-
-    correct_prediction0 = tf.equal(tf.argmax(one_hot_labels0, 1), tf.argmax(logits0, 1))
-    accuracy0 = tf.reduce_mean(tf.cast(correct_prediction0, tf.float32))
-
-    correct_prediction1 = tf.equal(tf.argmax(one_hot_labels1, 1), tf.argmax(logits1, 1))
-    accuracy1 = tf.reduce_mean(tf.cast(correct_prediction1, tf.float32))
-
-    correct_prediction2 = tf.equal(tf.argmax(one_hot_labels2, 1), tf.argmax(logits2, 1))
-    accuracy2 = tf.reduce_mean(tf.cast(correct_prediction2, tf.float32))
-
-    correct_prediction3 = tf.equal(tf.argmax(one_hot_labels3, 1), tf.argmax(logits3, 1))
-    accuracy3 = tf.reduce_mean(tf.cast(correct_prediction3, tf.float32))
+    label40 = tf.concat([one_hot_labels0, one_hot_labels1, one_hot_labels2, one_hot_labels3], 1)
+    loss40 = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=logits, labels=label40))
+    optimizer40 = tf.train.AdamOptimizer(learning_rate=lr).minimize(loss40)
+    correct_prediction40 = tf.equal(tf.argmax(label40, 1), tf.argmax(logits, 1))
+    accuracy40 = tf.reduce_mean(tf.cast(correct_prediction40, tf.float32))
 
     saver = tf.train.Saver()
     sess.run(tf.global_variables_initializer())
@@ -95,25 +83,25 @@ with tf.Session()as sess:
     coord = tf.train.Coordinator()
     threads = tf.train.start_queue_runners(sess=sess, coord=coord)
 
-    for i in range(6001):
+    for i in range(10001):
         b_image, b_label0, b_label1, b_label2, b_label3 = sess.run(
             [image_batch, label_batch0, label_batch1, label_batch2, label_batch3])
-        sess.run(optimizer, feed_dict={x: b_image, y0: b_label0, y1: b_label1, y2: b_label2, y3: b_label3})
+        sess.run(optimizer40, feed_dict={x: b_image, y0: b_label0, y1: b_label1, y2: b_label2, y3: b_label3})
 
         if i % 20 == 0:
-            if i % 2000 == 0:
+            if i % 3000 == 0:
                 sess.run(tf.assign(lr, lr / 3))
-            acc0, acc1, acc2, acc3, loss_ = sess.run([accuracy0, accuracy1, accuracy2, accuracy3, total_loss],
-                                                     feed_dict={
-                                                         x: b_image, y0: b_label0, y1: b_label1, y2: b_label2,
-                                                         y3: b_label3
-                                                     })
+            acc, loss_ = sess.run([accuracy40, loss40],
+                                  feed_dict={
+                                      x: b_image, y0: b_label0, y1: b_label1, y2: b_label2,
+                                      y3: b_label3
+                                  })
 
             learning_rate = sess.run(lr)
             print("Iter:%d Loss:%.3f Accuracy:%.2f, %.2f, %.2f, %.2f  Learning_rate:%.4f" % (
-                i, loss_, acc0, acc1, acc2, acc3, learning_rate))
+                i, loss_, acc, learning_rate))
 
-            if i == 6000:
+            if i == 10000:
                 saver.save(sess, "./captcha/models/crack_captcha.model", global_step=1)
                 break
 
