@@ -13,7 +13,7 @@ import random
 # Data loading params
 tf.flags.DEFINE_float("dev_sample_percentage", .2, "Percentage of the training data to use for validation")
 tf.flags.DEFINE_string("parent_dir", "audio/", "Data source for the positive data.")
-tf.flags.DEFINE_string("tr_sub_dirs", ['fold1/', 'fold2/', 'fold3/'], "Data source for the negative data.")
+tf.flags.DEFINE_string("tr_sub_dirs", ['folder1/', 'folder2/', 'folder3/'], "Data source for the negative data.")
 
 # Model Hyperparameters
 tf.flags.DEFINE_integer("n_inputs", 40, "Number of MFCCs, default is 40")
