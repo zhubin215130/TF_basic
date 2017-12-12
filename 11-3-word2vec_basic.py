@@ -37,7 +37,8 @@ url = 'http://mattmahoney.net/dc/'
 # pylint: disable=redefined-outer-name
 def maybe_download(filename, expected_bytes):
   """Download a file if not present, and make sure it's the right size."""
-  local_filename = os.path.join(gettempdir(), filename)
+  #local_filename = os.path.join(gettempdir(), filename)
+  local_filename = filename
   if not os.path.exists(local_filename):
     local_filename, _ = urllib.request.urlretrieve(url + filename,
                                                    local_filename)
@@ -51,7 +52,7 @@ def maybe_download(filename, expected_bytes):
   return local_filename
 
 
-filename = maybe_download('text8.zip', 31344016)
+filename = maybe_download('word2vec/text8.zip', 31344016)
 
 
 # Read the data into a list of strings.
@@ -269,7 +270,7 @@ try:
   plot_only = 500
   low_dim_embs = tsne.fit_transform(final_embeddings[:plot_only, :])
   labels = [reverse_dictionary[i] for i in xrange(plot_only)]
-  plot_with_labels(low_dim_embs, labels, os.path.join(gettempdir(), 'tsne.png'))
+  plot_with_labels(low_dim_embs, labels, 'word2vec/tsne.png')
 
 except ImportError as ex:
   print('Please install sklearn, matplotlib, and scipy to show embeddings.')
